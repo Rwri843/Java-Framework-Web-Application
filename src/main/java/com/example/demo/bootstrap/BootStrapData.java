@@ -16,12 +16,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-/**
- *
- *
- *
- *
- */
 @Component
 public class BootStrapData implements CommandLineRunner {
 
@@ -39,7 +33,7 @@ public class BootStrapData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-       /*
+        /*
         OutsourcedPart o= new OutsourcedPart();
         o.setCompanyName("Western Governors University");
         o.setName("out test");
@@ -66,6 +60,68 @@ public class BootStrapData implements CommandLineRunner {
         productRepository.save(bicycle);
         productRepository.save(unicycle);
         */
+
+        // Clearing repositories for multiple test runs
+        // partRepository.deleteAll();
+        // productRepository.deleteAll();
+        // outsourcedPartRepository.deleteAll();
+
+
+
+        // Toy Parts
+        if()outsourcedPartRepository.count() == 0){
+            OutsourcedPart wheels = new OutsourcedPart();
+            wheels.setCompanyName("Hot Wheels");
+            wheels.setName("RC Car Wheels");
+            wheels.setPrice(30.00);
+            wheels.setInv(50);
+
+            OutsourcedPart legoBricks = new OutsourcedPart();
+            legoBricks.setCompanyName("Legos");
+            legoBricks.setName("Lego Bricks Pack");
+            legoBricks.setPrice(20.00);
+            legoBricks.setInv(40);
+
+            OutsourcedPart dollFurniture = new OutsourcedPart();
+            dollFurniture.setCompanyName("Barbie");
+            dollFurniture.setName("Doll House Furniture");
+            dollFurniture.setPrice(50.00);
+            dollFurniture.setInv(25);
+
+            OutsourcedPart actionFigureStand = new OutsourcedPart();
+            actionFigureStand.setCompanyName("Marvel");
+            actionFigureStand.setName("Action Figure Stand");
+            actionFigureStand.setPrice(10.00);
+            actionFigureStand.setInv(60);
+
+            OutsourcedPart modelPaintBrush = new OutsourcedPart();
+            modelPaintBrush.setCompanyName("Crayola");
+            modelPaintBrush.setName("Model Paint Brushes");
+            modelPaintBrush.setPrice(15.00);
+            modelPaintBrush.setInv(30);
+
+            outsourcedPartRepository.save(wheels);
+            outsourcedPartRepository.save(legoBricks);
+            outsourcedPartRepository.save(dollFurniture);
+            outsourcedPartRepository.save(actionFigureStand);
+            outsourcedPartRepository.save(modelPaintBrush); }
+
+        if(productRepository.count() == 0){
+
+        Product RcCar = new Product("Hot Wheels Rc Car", 50.00, 15);
+        Product LegosSet = new Product("Lego Set", 40.00, 20);
+        Product BarbieDollhouse = new Product("Barbie Dollhouse", 35.00, 19);
+        Product ActionFigure = new Product("Marvel Action Figure Set", 25.00, 60);
+        Product ModelPaintKit = new Product("Crayola Model Paint Kit", 32.00, 100);
+
+
+        productRepository.save(RcCar);
+        productRepository.save(LegosSet);
+        productRepository.save(BarbieDollhouse);
+        productRepository.save(ActionFigure);
+        productRepository.save(ModelPaintKit);
+
+    }
 
         System.out.println("Started in Bootstrap");
         System.out.println("Number of Products"+productRepository.count());

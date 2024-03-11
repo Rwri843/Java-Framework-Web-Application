@@ -39,7 +39,7 @@ About link/button added to mainscreen.html:
 ```
 <a th:href="@{/about}" class="btn btn-primary btn-sm mb-3">About Us</a>
 ```
-AboutController created: 
+AboutController.java created: 
 ```
 @Controller
 @RequestMapping("/about")
@@ -51,5 +51,61 @@ public class AboutController {
         return "about";
     }
 }
+```
+E.  Add a sample inventory appropriate for your chosen store to the application. You should have five parts and five products in your sample inventory and should not overwrite existing data in the database.
+
+Five Products & Parts added to BootStrapData.java file:
+```
+if()outsourcedPartRepository.count() == 0){
+OutsourcedPart wheels = new OutsourcedPart();
+wheels.setCompanyName("Hot Wheels");
+wheels.setName("RC Car Wheels");
+wheels.setPrice(30.00);
+wheels.setInv(50);
+
+            OutsourcedPart legoBricks = new OutsourcedPart();
+            legoBricks.setCompanyName("Legos");
+            legoBricks.setName("Lego Bricks Pack");
+            legoBricks.setPrice(20.00);
+            legoBricks.setInv(40);
+
+            OutsourcedPart dollFurniture = new OutsourcedPart();
+            dollFurniture.setCompanyName("Barbie");
+            dollFurniture.setName("Doll House Furniture");
+            dollFurniture.setPrice(50.00);
+            dollFurniture.setInv(25);
+
+            OutsourcedPart actionFigureStand = new OutsourcedPart();
+            actionFigureStand.setCompanyName("Marvel");
+            actionFigureStand.setName("Action Figure Stand");
+            actionFigureStand.setPrice(10.00);
+            actionFigureStand.setInv(60);
+
+            OutsourcedPart modelPaintBrush = new OutsourcedPart();
+            modelPaintBrush.setCompanyName("Crayola");
+            modelPaintBrush.setName("Model Paint Brushes");
+            modelPaintBrush.setPrice(15.00);
+            modelPaintBrush.setInv(30);
+
+            outsourcedPartRepository.save(wheels);
+            outsourcedPartRepository.save(legoBricks);
+            outsourcedPartRepository.save(dollFurniture);
+            outsourcedPartRepository.save(actionFigureStand);
+            outsourcedPartRepository.save(modelPaintBrush); }
+
+        if(productRepository.count() == 0){
+
+        Product RcCar = new Product("Hot Wheels Rc Car", 50.00, 15);
+        Product LegosSet = new Product("Lego Set", 40.00, 20);
+        Product BarbieDollhouse = new Product("Barbie Dollhouse", 35.00, 19);
+        Product ActionFigure = new Product("Marvel Action Figure Set", 25.00, 60);
+        Product ModelPaintKit = new Product("Crayola Model Paint Kit", 32.00, 100);
+
+
+        productRepository.save(RcCar);
+        productRepository.save(LegosSet);
+        productRepository.save(BarbieDollhouse);
+        productRepository.save(ActionFigure);
+        productRepository.save(ModelPaintKit);
 ```
 
