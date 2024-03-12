@@ -390,3 +390,31 @@ Two test to test the max and min inventory match the expected value.
         assertEquals(minOut, partOut.getMinInv(), "Failed to set min on OutsourcedPart.");
     }
 ```
+
+J.  Remove the class files for *any* unused validators in order to clean your code.
+
+
+```
+// Deleted from ValidDeletPart.java
+ String message() default "Part cannot be deleted if used in a product.";
+    Class<?> [] groups() default {};
+    Class<? extends Payload> [] payload() default {};
+}
+
+// Deleted from DeletePartValidator.java
+public class DeletePartValidator implements ConstraintValidator<ValidDeletePart, Part> {
+    @Override
+    public void initialize(ValidDeletePart constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+    }
+
+    @Override
+    public boolean isValid(Part part, ConstraintValidatorContext constraintValidatorContext) {
+        if(part.getProducts().isEmpty()) return true;
+        else return false;
+    }
+}
+
+// 
+
+```
