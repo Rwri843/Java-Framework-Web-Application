@@ -262,7 +262,7 @@ public void setMinInv(int minInv) {
     <p th:if="${#fields.hasErrors('maxInv')}" th:errors="*{maxInv}">Maximum Inventory Error</p>
   ```  
 
-Rename the file the persistent storage is saved to.
+-Rename the file the persistent storage is saved to.
   ```  
   // In application.properties, changed
   // From:
@@ -270,5 +270,123 @@ Rename the file the persistent storage is saved to.
   // To:
   spring.datasource.url=jdbc:h2:file:~/h2-db-development:
   ```  
-Modify the code to enforce that the inventory is between or at the minimum and maximum value.
+-Modify the code to enforce that the inventory is between or at the minimum and maximum value.
+ 
+In Part.java isInvValid that checks if a given inventory value falls between minInv and maxInv
+```  
+public boolean isInvValid(int inventory) {
+return inventory >= minInv && inventory <= maxInv;
+}
+  ```  
 
+- [ ]  H.  Add validation for between or at the maximum and minimum fields. The validation must include the following:
+
+-Display error messages for low inventory when adding and updating parts if the inventory is less than the minimum number of parts.
+ 
+- Inventory check for Min and Max added to AddinhousePartController:
+```  
+// Check if the inventory falls below the minimum
+            if (part.getInv() < part.getMinInv()) {
+                theModel.addAttribute("error", "Inventory cannot fall below the minimum required.");
+                return "InhousePartForm";
+            }
+
+            // Check if the inventory goes above the maximum
+            if (part.getInv() > part.getMaxInv()) {
+                theModel.addAttribute("error", "Inventory cannot exceed the maximum allowed.");
+                return "InhousePartForm";
+            }
+```
+-Display error messages for low inventory when adding and updating products lowers the part inventory below the minimum.
+
+Updated AddProductController to reflect lowering of products: 
+```
+@PostMapping("/showFormAddProduct")
+    public String submitForm(@Valid @ModelAttribute("product") Product product, BindingResult bindingResult, Model theModel) {
+        theModel.addAttribute("product", product);
+
+        if(bindingResult.hasErrors()){
+           
+        } else {
+            ProductService repo = context.getBean(ProductServiceImpl.class);
+            PartService partService1 = context.getBean(PartServiceImpl.class);
+
+
+            boolean inventoryIsOk = true;
+            if(product.getId() != 0) {
+                Product existingProduct = repo.findById((int) product.getId());
+                int inventoryDifference = product.getInv() - existingProduct.getInv();
+                if(inventoryDifference > 0) {
+                    for (Part p : existingProduct.getParts()) {
+                        if ((p.getInv() - inventoryDifference) < p.getMinInv()) { // Assuming getMinInv() exists
+                            inventoryIsOk = false;
+                            break;
+                        }
+                    }
+                }
+            }
+```
+
+-Display error messages when adding and updating parts if the inventory is greater than the maximum.
+
+Inventory check for Min and Max added to AddOutsourcePartController:
+```
+// Check if inventory is below minimum
+if (part.getInv() < part.getMinInv()) {
+theModel.addAttribute("error", "Inventory cannot be less than the minimum required.");
+return "OutsourcedPartForm";
+}
+
+            // Check if inventory exceeds maximum
+            if (part.getInv() > part.getMaxInv()) {
+                theModel.addAttribute("error", "Inventory cannot exceed the maximum allowed.");
+                return "OutsourcedPartForm";
+            }
+```
+
+I.  Add at least two unit tests for the maximum and minimum fields to the PartTest class in the test package
+
+
+Two test to test the max and min inventory match the expected value. 
+```
+// The max value reflects the maximum number of items allowed in the inventory for a specific part, which helps in maintaining adequate stock levels without exceeding storage capacity.
+    @Test
+    void getMaxInv() {
+        int maxIn = 100;
+        int maxOut = 150;
+        partIn.setMaxInv(maxIn);
+        partOut.setMaxInv(maxOut);
+        assertEquals(maxIn, partIn.getMaxInv(), "The max for InhousePart did not match the expected value.");
+        assertEquals(maxOut, partOut.getMaxInv(), "The max for OutsourcedPart did not match the expected value.");
+    }
+// The min value represents the minimum number of items to be kept in inventory, ensuring a buffer for continuous operation without stockouts.
+    @Test
+    void setMaxInv() {
+        int maxIn = 100;
+        int maxOut = 150;
+        partIn.setMaxInv(maxIn);
+        partOut.setMaxInv(maxOut);
+        assertEquals(maxIn, partIn.getMaxInv(), "Failed to set max on InhousePart.");
+        assertEquals(maxOut, partOut.getMaxInv(), "Failed to set max on OutsourcedPart.");
+    }
+
+    @Test
+    void getMinInv() {
+        int minIn = 1;
+        int minOut = 1;
+        partIn.setMinInv(minIn);
+        partOut.setMinInv(minOut);
+        assertEquals(minIn, partIn.getMinInv(), "The min for InhousePart did not match the expected value.");
+        assertEquals(minOut, partOut.getMinInv(), "The min for OutsourcedPart did not match the expected value.");
+    }
+
+    @Test
+    void setMinInv() {
+        int minIn = 1;
+        int minOut = 1;
+        partIn.setMinInv(minIn);
+        partOut.setMinInv(minOut);
+        assertEquals(minIn, partIn.getMinInv(), "Failed to set min on InhousePart.");
+        assertEquals(minOut, partOut.getMinInv(), "Failed to set min on OutsourcedPart.");
+    }
+```
