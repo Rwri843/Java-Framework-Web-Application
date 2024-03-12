@@ -53,8 +53,8 @@ public abstract class Part implements Serializable {
         this.name = name;
         this.price = price;
         this.inv = inv;
-        this.minInv = minInv;
-        this.maxInv = maxInv;
+        this.minInv = 0;
+        this.maxInv = 100;
     }
 
     // Full constructor including ID
@@ -63,8 +63,8 @@ public abstract class Part implements Serializable {
         this.name = name;
         this.price = price;
         this.inv = inv;
-        this.minInv = minInv;
-        this.maxInv = maxInv;
+        this.minInv = 0;
+        this.maxInv = 100;
     }
 
     public long getId() {

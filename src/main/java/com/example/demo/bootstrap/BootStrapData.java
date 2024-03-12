@@ -38,11 +38,11 @@ public class BootStrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if (outsourcedPartRepository.count() == 0) {
-            createAndSaveOutsourcedPart("Hot Wheels", "RC Car Wheels", 30.00, 50, 10, 5, 100);
-            createAndSaveOutsourcedPart("Legos", "Lego Bricks Pack", 20.00, 40, 11, 10, 200);
-            createAndSaveOutsourcedPart("Barbie", "Doll House Furniture", 50.00, 25, 12, 5, 50);
-            createAndSaveOutsourcedPart("Marvel", "Action Figure Stand", 10.00, 60, 13, 20, 120);
-            createAndSaveOutsourcedPart("Crayola", "Model Paint Brushes", 15.00, 30, 14, 10, 70);
+            createAndSaveOutsourcedPart("Hot Wheels", "RC Car Wheels", 30.00, 50, 10, 5, 99);
+            createAndSaveOutsourcedPart("Legos", "Lego Bricks Pack", 20.00, 40, 11, 5, 99);
+            createAndSaveOutsourcedPart("Barbie", "Doll House Furniture", 50.00, 25, 12, 5, 99);
+            createAndSaveOutsourcedPart("Marvel", "Action Figure Stand", 10.00, 60, 13, 5, 99);
+            createAndSaveOutsourcedPart("Crayola", "Model Paint Brushes", 15.00, 30, 14, 5, 99);
         }
 
         if (productRepository.count() == 0) {

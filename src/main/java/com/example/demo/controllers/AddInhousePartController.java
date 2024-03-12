@@ -24,31 +24,47 @@ import javax.validation.Valid;
  *
  *
  */
+
 @Controller
-public class AddInhousePartController{
+public class AddInhousePartController {
+
     @Autowired
     private ApplicationContext context;
 
     @GetMapping("/showFormAddInPart")
-    public String showFormAddInhousePart(Model theModel){
-        InhousePart inhousepart=new InhousePart();
-        theModel.addAttribute("inhousepart",inhousepart);
+    public String showFormAddInhousePart(Model theModel) {
+        InhousePart inhousePart = new InhousePart();
+        theModel.addAttribute("inhousepart", inhousePart);
         return "InhousePartForm";
     }
 
     @PostMapping("/showFormAddInPart")
-    public String submitForm(@Valid @ModelAttribute("inhousepart") InhousePart part, BindingResult theBindingResult, Model theModel){
-        theModel.addAttribute("inhousepart",part);
-        if(theBindingResult.hasErrors()){
+    public String submitForm(@Valid @ModelAttribute("inhousepart") InhousePart part, BindingResult theBindingResult, Model theModel) {
+        theModel.addAttribute("inhousepart", part);
+        if (theBindingResult.hasErrors()) {
             return "InhousePartForm";
-        }
-        else{
-        InhousePartService repo=context.getBean(InhousePartServiceImpl.class);
-        InhousePart ip=repo.findById((int)part.getId());
-        if(ip!=null)part.setProducts(ip.getProducts());
+        } else {
+            InhousePartService repo = context.getBean(InhousePartServiceImpl.class);
+            InhousePart ip = repo.findById((int) part.getId());
+
+            if (ip != null) part.setProducts(ip.getProducts());
+
+            // Check if the inventory falls below the minimum
+            if (part.getInv() < part.getMinInv()) {
+                theModel.addAttribute("error", "Inventory cannot fall below the minimum required.");
+                return "InhousePartForm";
+            }
+
+            // Check if the inventory goes above the maximum
+            if (part.getInv() > part.getMaxInv()) {
+                theModel.addAttribute("error", "Inventory cannot exceed the maximum allowed.");
+                return "InhousePartForm";
+            }
+
+
             repo.save(part);
 
-        return "confirmationaddpart";}
+            return "confirmationaddpart";
+        }
     }
-
 }

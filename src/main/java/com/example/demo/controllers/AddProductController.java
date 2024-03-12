@@ -47,50 +47,41 @@ public class AddProductController {
         theModel.addAttribute("assparts",product.getParts());
         return "productForm";
     }
-
     @PostMapping("/showFormAddProduct")
     public String submitForm(@Valid @ModelAttribute("product") Product product, BindingResult bindingResult, Model theModel) {
         theModel.addAttribute("product", product);
 
         if(bindingResult.hasErrors()){
-            ProductService productService = context.getBean(ProductServiceImpl.class);
-            Product product2 = new Product();
-            try {
-                product2 = productService.findById((int) product.getId());
-            } catch (Exception e) {
-                System.out.println("Error Message " + e.getMessage());
-            }
-            theModel.addAttribute("parts", partService.findAll());
-            List<Part>availParts=new ArrayList<>();
-            for(Part p: partService.findAll()){
-                if(!product2.getParts().contains(p))availParts.add(p);
-            }
-            theModel.addAttribute("availparts",availParts);
-            theModel.addAttribute("assparts",product2.getParts());
-            return "productForm";
-        }
- //       theModel.addAttribute("assparts", assparts);
- //       this.product=product;
-//        product.getParts().addAll(assparts);
-        else {
+
+        } else {
             ProductService repo = context.getBean(ProductServiceImpl.class);
-            if(product.getId()!=0) {
-                Product product2 = repo.findById((int) product.getId());
-                PartService partService1 = context.getBean(PartServiceImpl.class);
-                if(product.getInv()- product2.getInv()>0) {
-                    for (Part p : product2.getParts()) {
-                        int inv = p.getInv();
-                        p.setInv(inv - (product.getInv() - product2.getInv()));
-                        partService1.save(p);
+            PartService partService1 = context.getBean(PartServiceImpl.class);
+
+
+            boolean inventoryIsOk = true;
+            if(product.getId() != 0) {
+                Product existingProduct = repo.findById((int) product.getId());
+                int inventoryDifference = product.getInv() - existingProduct.getInv();
+                if(inventoryDifference > 0) {
+                    for (Part p : existingProduct.getParts()) {
+                        if ((p.getInv() - inventoryDifference) < p.getMinInv()) { // Assuming getMinInv() exists
+                            inventoryIsOk = false;
+                            break;
+                        }
                     }
                 }
             }
-            else{
-                product.setInv(0);
+
+            if (!inventoryIsOk) {
+                theModel.addAttribute("inventoryError", "Updating this product would lower a part's inventory below the minimum allowed.");
+                // Add necessary attributes to model for rendering the form again
+                return "productForm";
             }
-            repo.save(product);
-            return "confirmationaddproduct";
+
+            // Your existing logic for updating inventory and saving the product...
         }
+
+        return "confirmationaddproduct";
     }
 
     @GetMapping("/showProductFormForUpdate")

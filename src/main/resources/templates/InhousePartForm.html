@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Part Form</title>
@@ -10,8 +9,11 @@
 <h1>Inhouse Part Detail</h1>
 <form action="#" th:action="@{/showFormAddInPart}" th:object="${inhousepart}" method="POST">
 
+    <!-- Error message display -->
+    <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
+
     <!-- Add hidden form field to handle update -->
-    <p><input type="hidden" th:field="*{id}"/></p>
+    <input type="hidden" th:field="*{id}"/>
 
     <p><input type="text" th:field="*{name}" placeholder="Name" class="form-control mb-4 col-4"/></p>
 
@@ -21,14 +23,11 @@
     <p><input type="text" th:field="*{inv}" placeholder="Inventory" class="form-control mb-4 col-4"/></p>
     <p th:if="${#fields.hasErrors('inv')}" th:errors="*{inv}">Inventory Error</p>
 
-
     <p><input type="text" th:field="*{partId}" placeholder="Part ID" class="form-control mb-4 col-4"/></p>
 
     <p><input type="submit" value="Submit" /></p>
 </form>
-<p><errors path="price" cssClass=""error/><p>
 
-<a href="http://localhost:8080/">Link
-    to Main Screen</a>
+<a href="http://localhost:8080/">Link to Main Screen</a>
 </body>
 </html>
