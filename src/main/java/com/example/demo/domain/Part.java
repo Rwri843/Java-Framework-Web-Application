@@ -36,7 +36,10 @@ public abstract class Part implements Serializable {
 
     @Min(value = 0, message = "Maximum inventory must not be less than 0")
     private int maxInv;
-
+    // Checks if a given inventory value falls between minInv and maxInv.
+    public boolean isInvValid(int inventory) {
+        return inventory >= minInv && inventory <= maxInv;
+    }
 
     @ManyToMany
     @JoinTable(name="product_part", joinColumns = @JoinColumn(name="part_id"),
