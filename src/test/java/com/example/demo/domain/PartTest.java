@@ -156,4 +156,44 @@ class PartTest {
         partOut.setId(1l);
         assertEquals(partIn.hashCode(),partOut.hashCode());
     }
+    @Test
+    void getMaxInv() {
+        int maxIn = 100;
+        int maxOut = 150;
+        partIn.setMaxInv(maxIn);
+        partOut.setMaxInv(maxOut);
+        assertEquals(maxIn, partIn.getMaxInv(), "The max for InhousePart did not match the expected value.");
+        assertEquals(maxOut, partOut.getMaxInv(), "The max for OutsourcedPart did not match the expected value.");
+    }
+
+    @Test
+    void setMaxInv() {
+        int maxIn = 100;
+        int maxOut = 150;
+        partIn.setMaxInv(maxIn);
+        partOut.setMaxInv(maxOut);
+        assertEquals(maxIn, partIn.getMaxInv(), "Failed to set max on InhousePart.");
+        assertEquals(maxOut, partOut.getMaxInv(), "Failed to set max on OutsourcedPart.");
+    }
+
+    @Test
+    void getMinInv() {
+        int minIn = 1;
+        int minOut = 1;
+        partIn.setMinInv(minIn);
+        partOut.setMinInv(minOut);
+        assertEquals(minIn, partIn.getMinInv(), "The min for InhousePart did not match the expected value.");
+        assertEquals(minOut, partOut.getMinInv(), "The min for OutsourcedPart did not match the expected value.");
+    }
+
+    @Test
+    void setMinInv() {
+        int minIn = 1;
+        int minOut = 1;
+        partIn.setMinInv(minIn);
+        partOut.setMinInv(minOut);
+        assertEquals(minIn, partIn.getMinInv(), "Failed to set min on InhousePart.");
+        assertEquals(minOut, partOut.getMinInv(), "Failed to set min on OutsourcedPart.");
+    }
+
 }
