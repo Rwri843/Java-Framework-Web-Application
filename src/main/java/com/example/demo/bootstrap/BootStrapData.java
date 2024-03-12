@@ -1,5 +1,5 @@
 package com.example.demo.bootstrap;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.domain.InhousePart;
 import com.example.demo.domain.OutsourcedPart;
 import com.example.demo.domain.Part;
@@ -20,20 +20,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
-
-
-
-
-
-// (imports omitted for brevity)
-
 @Component
 public class BootStrapData implements CommandLineRunner {
+
     private final PartRepository partRepository;
     private final ProductRepository productRepository;
     private final OutsourcedPartRepository outsourcedPartRepository;
 
+    @Autowired
     public BootStrapData(PartRepository partRepository, ProductRepository productRepository, OutsourcedPartRepository outsourcedPartRepository) {
         this.partRepository = partRepository;
         this.productRepository = productRepository;
@@ -42,14 +36,15 @@ public class BootStrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Toy Parts
+
         if (outsourcedPartRepository.count() == 0) {
-            createAndSaveOutsourcedPart("Hot Wheels", "RC Car Wheels", 30.00, 50, 10);
-            createAndSaveOutsourcedPart("Legos", "Lego Bricks Pack", 20.00, 40, 11);
-            createAndSaveOutsourcedPart("Barbie", "Doll House Furniture", 50.00, 25, 12);
-            createAndSaveOutsourcedPart("Marvel", "Action Figure Stand", 10.00, 60, 13);
-            createAndSaveOutsourcedPart("Crayola", "Model Paint Brushes", 15.00, 30, 14);
+            createAndSaveOutsourcedPart("Hot Wheels", "RC Car Wheels", 30.00, 50, 10, 5, 100);
+            createAndSaveOutsourcedPart("Legos", "Lego Bricks Pack", 20.00, 40, 11, 10, 200);
+            createAndSaveOutsourcedPart("Barbie", "Doll House Furniture", 50.00, 25, 12, 5, 50);
+            createAndSaveOutsourcedPart("Marvel", "Action Figure Stand", 10.00, 60, 13, 20, 120);
+            createAndSaveOutsourcedPart("Crayola", "Model Paint Brushes", 15.00, 30, 14, 10, 70);
         }
+
         if (productRepository.count() == 0) {
             createAndSaveProduct("Hot Wheels Rc Car", 50.00, 15);
             createAndSaveProduct("Lego Set", 40.00, 20);
@@ -58,19 +53,22 @@ public class BootStrapData implements CommandLineRunner {
             createAndSaveProduct("Crayola Model Paint Kit", 32.00, 100);
         }
         System.out.println("Started in Bootstrap");
-        System.out.println("Number of Products" + productRepository.count());
+        System.out.println("Number of Products: " + productRepository.count());
         System.out.println(productRepository.findAll());
-        System.out.println("Number of Parts" + partRepository.count());
+        System.out.println("Number of Parts: " + partRepository.count());
         System.out.println(partRepository.findAll());
     }
 
-    private void createAndSaveOutsourcedPart(String companyName, String name, double price, int inv, int id) {
+    private void createAndSaveOutsourcedPart(String companyName, String name, double price, int inv, int id, int minInv, int maxInv) {
         OutsourcedPart part = new OutsourcedPart();
         part.setCompanyName(companyName);
         part.setName(name);
         part.setPrice(price);
         part.setInv(inv);
         part.setId(id);
+        part.setMinInv(minInv);
+        part.setMaxInv(maxInv);
+
         outsourcedPartRepository.save(part);
     }
 

@@ -109,3 +109,166 @@ wheels.setInv(50);
         productRepository.save(ModelPaintKit);
 ```
 
+F.  Add a “Buy Now” button to your product list. Your “Buy Now” button must meet *each* of the following parameters:
+   - The “Buy Now” button must be next to the buttons that update and delete products.
+   - Display a message that indicates the success or failure of a purchase. 
+   - The button should decrement the inventory of that product by **one**. It should not affect the inventory of any of the associated parts.
+
+Updated Table and added Buy option:
+```
+<tr th:each="tempProduct : ${products}">
+            <td th:text="${tempProduct.name}">Product Name</td>
+            <td th:text="${tempProduct.price}">Product Price</td>
+            <td th:text="${tempProduct.inv}">Inventory Count</td>
+            <td>
+                <form th:action="@{/buyProduct}" method="post" onsubmit="return confirm('By choosing Buy Now, you will purchase the item. Are you sure of your purchase?')">
+                    <input type="hidden" name="productId" th:value="${tempProduct.id}" />
+                    <button type="submit" class="btn btn-primary btn-sm mb-3">Buy Now</button>
+                </form>
+                <a th:href="@{/showProductFormForUpdate(productID=${tempProduct.id})}" class="btn btn-primary btn-sm mb-3">Update</a>
+                <a th:href="@{/deleteproduct(productID=${tempProduct.id})}" class="btn btn-primary btn-sm mb-3"
+                   onclick="if(!(confirm('Are you sure you want to delete this product?'))) return false;">Delete</a>
+            </td>
+        </tr>
+```
+ProductController.java file added: 
+
+public class ProductController {
+```
+    @Autowired
+    private ProductRepository productRepository;
+
+    @PostMapping("/buyProduct")
+    public String buyProduct(@RequestParam("productId") Long productId) {
+        Optional<Product> productOpt = productRepository.findById(productId);
+
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+
+            if (product.getInv() > 0) {
+                product.setInv(product.getInv() - 1);
+                productRepository.save(product);
+                return "redirect:/purchaseSuccess";
+            }
+        }
+
+        return "redirect:/purchaseError";
+    }
+
+
+
+    @GetMapping("/purchaseSuccess")
+    public String showPurchaseSuccess() {
+        // Return the view for a successful purchase message
+        return "purchaseSuccess"; // Assumes you have a purchaseSuccess.html template
+    }
+
+    @GetMapping("/purchaseError")
+    public String showPurchaseError() {
+        // Return the view for an error message on purchase
+        return "purchaseError"; // Assumes you have a purchaseError.html template
+    }
+
+    // Add any other mappings for your controller here
+}
+```
+
+purchaseSuccess.html added: 
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Approved!</title>
+</head>
+<body>
+<h1>Your purchase was successful!</h1>
+<p>
+  <a href="http://localhost:8080/">Return to Main Screen</a>
+</p>
+</body>
+```
+purchaseError.html added: 
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Denied</title>
+</head>
+<body>
+<h1>Your purchase was not approved.</h1>
+<p>
+    <a href="http://localhost:8080/">Return to Main Screen</a>
+</p>
+</body>
+</html>
+```
+- [ ]  G.  Modify the parts to track maximum and minimum inventory by doing the following:
+- Add additional fields to the part entity for maximum and minimum inventory:
+```
+// Line 27-34
+@Min(value = 0, message = "Price value must be positive")
+    double price;
+    @Min(value = 0, message = "Inventory value must be positive")
+    int inv;
+    @Column(name = "MAX_INV")
+    int max_inv;
+    @Column(name = "MIN_INV")
+    int min_inv;
+
+// Line 104 - 114
+public void setMinInv(int minInv) {
+        this.minInv = minInv;
+    }
+
+    public int getMaxInv() {
+        return maxInv;
+    }
+
+    public void setMaxInv(int maxInv) {
+        this.maxInv = maxInv;
+    }
+ ```   
+
+-Modify the sample inventory to include the maximum and minimum fields.
+ ```   
+ //minInv and maxInv added to sample parts list also
+ // Line 66-67
+ part.setMinInv(minInv);
+ part.setMaxInv(maxInv);
+  ```
+- Add to the InhousePartForm and OutsourcedPartForm forms additional text inputs for the inventory so the user can set the maximum and minimum values.
+  ```
+  // IhousePartForm.html
+  <!-- Minimum inventory input -->
+    <p><input type="text" th:field="*{minInv}" placeholder="Minimum Inventory" class="form-control mb-4 col-4"/></p>
+    <p th:if="${#fields.hasErrors('minInv')}" th:errors="*{minInv}">Minimum Inventory Error</p>
+
+    <!-- Maximum inventory input -->
+    <p><input type="text" th:field="*{maxInv}" placeholder="Maximum Inventory" class="form-control mb-4 col-4"/></p>
+    <p th:if="${#fields.hasErrors('maxInv')}" th:errors="*{maxInv}">Maximum Inventory Error</p>
+
+  // OutsourcePartForm.html
+  <!-- Minimum inventory input -->
+    <p><input type="text" th:field="*{minInv}" placeholder="Minimum Inventory" class="form-control mb-4 col-4"/></p>
+    <p th:if="${#fields.hasErrors('minInv')}" th:errors="*{minInv}">Minimum Inventory Error</p>
+
+    <!-- Maximum inventory input -->
+    <p><input type="text" th:field="*{maxInv}" placeholder="Maximum Inventory" class="form-control mb-4 col-4"/></p>
+    <p th:if="${#fields.hasErrors('maxInv')}" th:errors="*{maxInv}">Maximum Inventory Error</p>
+  ```  
+
+Rename the file the persistent storage is saved to.
+  ```  
+  // In application.properties, changed
+  // From:
+  spring.datasource.url=jdbc:h2:file:~/spring-boot-h2-db102
+  // To:
+  spring.datasource.url=jdbc:h2:file:~/h2-db-development:
+  ```  
+Modify the code to enforce that the inventory is between or at the minimum and maximum value.
+
