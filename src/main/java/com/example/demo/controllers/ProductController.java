@@ -45,5 +45,5 @@ public class ProductController {
         return "purchaseError"; // Assumes you have a purchaseError.html template
     }
 
-    // Add any other mappings for your controller here
+
 }

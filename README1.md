@@ -1,45 +1,74 @@
-Includes notes describing where in the code to find the changes you made for each of parts C to J. 
+
  
-Each note should include the prompt, file name, line number, and change.
+
 
 <h1>D287 – JAVA FRAMEWORKS</h1>
 
 C:  Customize the HTML user interface for your customer’s application. The user interface should include the shop name, the product names, and the names of the parts.
 
-CSS code added to mainscreen.html and Title and header changed:
+CSS code added to mainscreen.html Line: 15-65. Title named was changed and CSS was added to give color to the header and footer.
 ```
-
 <title>Rob's Toy Store</title>
-    <style>
+<style>
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
         .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #50b3a2;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #077187 1px solid;
+        }
+        header h1, header nav {
+            text-align: center;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        header nav {
+            margin-top: 10px;
+        }
+        header nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #077187;
+        }
+
+        .content h2 {
+            color: #50b3a2;
+        }
+        .content p {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        footer {
             text-align: center;
             padding: 20px;
-            background-color: deepskyblue;
+            background-color: #50b3a2;
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
         }
-        h1 {
-            color: firebrick;
-            font-size: 40px;
-
-        }
-        hr{
-            border: 0;
-            height: 2px;
-            background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(68,68,68,0.75), rgba(0,0,0,0));
-            margin-top: 10px; 
+    </style>
 ```
-D:  Add an “About” page to the application to describe your chosen customer’s company to web viewers and include navigation to and from the “About” page and the main screen.
+D. Add an “About” page to the application to describe your chosen customer’s company to web viewers and include navigation to and from the “About” page and the main screen.
 
---About.html created Lines 1-97, AboutController.java created, and  
-About link/button added to mainscreen.html:
+About.html created Lines 1-97, AboutController.java created line 1-16.  
+About link/button added to mainscreen.html, for access to About.html. 
 ```
 <a th:href="@{/about}" class="btn btn-primary btn-sm mb-3">About Us</a>
 ```
-AboutController.java created: 
+AboutController.java created to handle request for About.html.
 ```
 @Controller
 @RequestMapping("/about")
@@ -52,75 +81,43 @@ public class AboutController {
     }
 }
 ```
-E.  Add a sample inventory appropriate for your chosen store to the application. You should have five parts and five products in your sample inventory and should not overwrite existing data in the database.
+E. Add a sample inventory appropriate for your chosen store to the application. You should have five parts and five products in your sample inventory and should not overwrite existing data in the database.
 
-Five Products & Parts added to BootStrapData.java file:
+Five Products & Parts added to BootStrapData.java file: Line 38-60. 
 ```
-if()outsourcedPartRepository.count() == 0){
-OutsourcedPart wheels = new OutsourcedPart();
-wheels.setCompanyName("Hot Wheels");
-wheels.setName("RC Car Wheels");
-wheels.setPrice(30.00);
-wheels.setInv(50);
+public void run(String... args) throws Exception {
 
-            OutsourcedPart legoBricks = new OutsourcedPart();
-            legoBricks.setCompanyName("Legos");
-            legoBricks.setName("Lego Bricks Pack");
-            legoBricks.setPrice(20.00);
-            legoBricks.setInv(40);
+        if (outsourcedPartRepository.count() == 0) {
+            createAndSaveOutsourcedPart("Hot Wheels", "RC Car Wheels", 30.00, 50, 10);
+            createAndSaveOutsourcedPart("Legos", "Lego Bricks Pack", 20.00, 40, 11);
+            createAndSaveOutsourcedPart("Barbie", "Doll House Furniture", 50.00, 25, 12);
+            createAndSaveOutsourcedPart("Marvel", "Action Figure Stand", 10.00, 60, 13);
+            createAndSaveOutsourcedPart("Crayola", "Model Paint Brushes", 15.00, 30, 14);
+        }
 
-            OutsourcedPart dollFurniture = new OutsourcedPart();
-            dollFurniture.setCompanyName("Barbie");
-            dollFurniture.setName("Doll House Furniture");
-            dollFurniture.setPrice(50.00);
-            dollFurniture.setInv(25);
-
-            OutsourcedPart actionFigureStand = new OutsourcedPart();
-            actionFigureStand.setCompanyName("Marvel");
-            actionFigureStand.setName("Action Figure Stand");
-            actionFigureStand.setPrice(10.00);
-            actionFigureStand.setInv(60);
-
-            OutsourcedPart modelPaintBrush = new OutsourcedPart();
-            modelPaintBrush.setCompanyName("Crayola");
-            modelPaintBrush.setName("Model Paint Brushes");
-            modelPaintBrush.setPrice(15.00);
-            modelPaintBrush.setInv(30);
-
-            outsourcedPartRepository.save(wheels);
-            outsourcedPartRepository.save(legoBricks);
-            outsourcedPartRepository.save(dollFurniture);
-            outsourcedPartRepository.save(actionFigureStand);
-            outsourcedPartRepository.save(modelPaintBrush); }
-
-        if(productRepository.count() == 0){
-
-        Product RcCar = new Product("Hot Wheels Rc Car", 50.00, 15);
-        Product LegosSet = new Product("Lego Set", 40.00, 20);
-        Product BarbieDollhouse = new Product("Barbie Dollhouse", 35.00, 19);
-        Product ActionFigure = new Product("Marvel Action Figure Set", 25.00, 60);
-        Product ModelPaintKit = new Product("Crayola Model Paint Kit", 32.00, 100);
-
-
-        productRepository.save(RcCar);
-        productRepository.save(LegosSet);
-        productRepository.save(BarbieDollhouse);
-        productRepository.save(ActionFigure);
-        productRepository.save(ModelPaintKit);
+        if (productRepository.count() == 0) {
+            createAndSaveProduct("Hot Wheels Rc Car", 50.00, 15);
+            createAndSaveProduct("Lego Set", 40.00, 20);
+            createAndSaveProduct("Barbie Dollhouse", 35.00, 19);
+            createAndSaveProduct("Marvel Action Figure Set", 25.00, 60);
+            createAndSaveProduct("Crayola Model Paint Kit", 32.00, 100);
+        }
+        System.out.println("Started in Bootstrap");
+        System.out.println("Number of Products: " + productRepository.count());
+        System.out.println(productRepository.findAll());
+        System.out.println("Number of Parts: " + partRepository.count());
+        System.out.println(partRepository.findAll());
+    }
 ```
 
-F.  Add a “Buy Now” button to your product list. Your “Buy Now” button must meet *each* of the following parameters:
+F. Add a “Buy Now” button to your product list. Your “Buy Now” button must meet *each* of the following parameters:
    - The “Buy Now” button must be next to the buttons that update and delete products.
    - Display a message that indicates the success or failure of a purchase. 
    - The button should decrement the inventory of that product by **one**. It should not affect the inventory of any of the associated parts.
 
-Updated Table and added Buy option:
+Updated Table and added Buy option Line 145-163, in mainscreen.html. A confirmation pop-up was generated to confirm purchase. 
 ```
-<tr th:each="tempProduct : ${products}">
-            <td th:text="${tempProduct.name}">Product Name</td>
-            <td th:text="${tempProduct.price}">Product Price</td>
-            <td th:text="${tempProduct.inv}">Inventory Count</td>
-            <td>
+<td>
                 <form th:action="@{/buyProduct}" method="post" onsubmit="return confirm('By choosing Buy Now, you will purchase the item. Are you sure of your purchase?')">
                     <input type="hidden" name="productId" th:value="${tempProduct.id}" />
                     <button type="submit" class="btn btn-primary btn-sm mb-3">Buy Now</button>
@@ -129,11 +126,10 @@ Updated Table and added Buy option:
                 <a th:href="@{/deleteproduct(productID=${tempProduct.id})}" class="btn btn-primary btn-sm mb-3"
                    onclick="if(!(confirm('Are you sure you want to delete this product?'))) return false;">Delete</a>
             </td>
-        </tr>
 ```
-ProductController.java file added: 
+ProductController.java file added Line 1-50. To Show successful or denied message depending on the inventory. 
 
-public class ProductController {
+
 ```
     @Autowired
     private ProductRepository productRepository;
@@ -173,7 +169,7 @@ public class ProductController {
 }
 ```
 
-purchaseSuccess.html added: 
+purchaseSuccess.html added, Line 1-15. Page shows with message if purchase successful. 
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -189,8 +185,7 @@ purchaseSuccess.html added:
 </p>
 </body>
 ```
-purchaseError.html added: 
-
+purchaseError.html added, Line 1-14. Page and message generated if purchase unsuccessful. 
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -207,20 +202,29 @@ purchaseError.html added:
 </body>
 </html>
 ```
-- [ ]  G.  Modify the parts to track maximum and minimum inventory by doing the following:
-- Add additional fields to the part entity for maximum and minimum inventory:
+G. Modify the parts to track maximum and minimum inventory by doing the following:
+-Add additional fields to the part entity for maximum and minimum inventory
+part.java Line 28-40, Tracks value of maximum and minimum values with messages.
 ```
-// Line 27-34
-@Min(value = 0, message = "Price value must be positive")
-    double price;
-    @Min(value = 0, message = "Inventory value must be positive")
-    int inv;
-    @Column(name = "MAX_INV")
-    int max_inv;
-    @Column(name = "MIN_INV")
-    int min_inv;
 
-// Line 104 - 114
+@Min(value = 0, message = "Price value must be positive")
+    private double price;
+
+    @Min(value = 0, message = "Inventory value must be positive")
+    private int inv;
+
+    @Min(value = 0, message = "Minimum inventory must not be less than 0")
+    private int minInv;
+
+    @Min(value = 0, message = "Maximum inventory must not be less than 0")
+    private int maxInv;
+    // Checks if a given inventory value falls between minInv and maxInv.
+    public boolean isInvValid(int inventory) {
+        return inventory >= minInv && inventory <= maxInv;
+    }
+
+
+// part. java Line 104 - 114, used with the getter and setter to update values. 
 public void setMinInv(int minInv) {
         this.minInv = minInv;
     }
@@ -236,14 +240,14 @@ public void setMinInv(int minInv) {
 
 -Modify the sample inventory to include the maximum and minimum fields.
  ```   
- //minInv and maxInv added to sample parts list also
- // Line 66-67
+ //minInv and maxInv added to sample parts list in part.java
+ // Line 69-71
  part.setMinInv(minInv);
  part.setMaxInv(maxInv);
   ```
 - Add to the InhousePartForm and OutsourcedPartForm forms additional text inputs for the inventory so the user can set the maximum and minimum values.
   ```
-  // IhousePartForm.html
+  // IhousePartForm.html Line 26-32, Input options added for min and max inventory. 
   <!-- Minimum inventory input -->
     <p><input type="text" th:field="*{minInv}" placeholder="Minimum Inventory" class="form-control mb-4 col-4"/></p>
     <p th:if="${#fields.hasErrors('minInv')}" th:errors="*{minInv}">Minimum Inventory Error</p>
@@ -252,7 +256,7 @@ public void setMinInv(int minInv) {
     <p><input type="text" th:field="*{maxInv}" placeholder="Maximum Inventory" class="form-control mb-4 col-4"/></p>
     <p th:if="${#fields.hasErrors('maxInv')}" th:errors="*{maxInv}">Maximum Inventory Error</p>
 
-  // OutsourcePartForm.html
+  // OutsourcePartForm.html Line 27-33, Min and Max inventory input added
   <!-- Minimum inventory input -->
     <p><input type="text" th:field="*{minInv}" placeholder="Minimum Inventory" class="form-control mb-4 col-4"/></p>
     <p th:if="${#fields.hasErrors('minInv')}" th:errors="*{minInv}">Minimum Inventory Error</p>
@@ -264,7 +268,7 @@ public void setMinInv(int minInv) {
 
 -Rename the file the persistent storage is saved to.
   ```  
-  // In application.properties, changed
+  // In application.properties, changed. Line 6-7.
   // From:
   spring.datasource.url=jdbc:h2:file:~/spring-boot-h2-db102
   // To:
@@ -279,11 +283,11 @@ return inventory >= minInv && inventory <= maxInv;
 }
   ```  
 
-- [ ]  H.  Add validation for between or at the maximum and minimum fields. The validation must include the following:
+H.Add validation for between or at the maximum and minimum fields. The validation must include the following:
 
 -Display error messages for low inventory when adding and updating parts if the inventory is less than the minimum number of parts.
  
-- Inventory check for Min and Max added to AddinhousePartController:
+Inventory check for Min and Max added to AddinhousePartController, Line 51-62.
 ```  
 // Check if the inventory falls below the minimum
             if (part.getInv() < part.getMinInv()) {
@@ -299,7 +303,7 @@ return inventory >= minInv && inventory <= maxInv;
 ```
 -Display error messages for low inventory when adding and updating products lowers the part inventory below the minimum.
 
-Updated AddProductController to reflect lowering of products: 
+Updated AddProductController to reflect lowering of products, Line 50-73. 
 ```
 @PostMapping("/showFormAddProduct")
     public String submitForm(@Valid @ModelAttribute("product") Product product, BindingResult bindingResult, Model theModel) {
@@ -329,7 +333,7 @@ Updated AddProductController to reflect lowering of products:
 
 -Display error messages when adding and updating parts if the inventory is greater than the maximum.
 
-Inventory check for Min and Max added to AddOutsourcePartController:
+Inventory check for Min and Max added to AddOutsourcePartController, Line 52-62. 
 ```
 // Check if inventory is below minimum
 if (part.getInv() < part.getMinInv()) {
@@ -344,10 +348,10 @@ return "OutsourcedPartForm";
             }
 ```
 
-I.  Add at least two unit tests for the maximum and minimum fields to the PartTest class in the test package
+I. Add at least two unit tests for the maximum and minimum fields to the PartTest class in the test package
 
 
-Two test to test the max and min inventory match the expected value. 
+PartTest.java Line 159-197, Two test to test the max and min inventory match the expected value. Line 
 ```
 // The max value reflects the maximum number of items allowed in the inventory for a specific part, which helps in maintaining adequate stock levels without exceeding storage capacity.
     @Test
@@ -391,17 +395,17 @@ Two test to test the max and min inventory match the expected value.
     }
 ```
 
-J.  Remove the class files for *any* unused validators in order to clean your code.
+J. Remove the class files for any unused validators in order to clean your code.
 
 
 ```
-// Deleted from ValidDeletPart.java
+// Deleted from ValidDeletePart. Line 11-15.
  String message() default "Part cannot be deleted if used in a product.";
     Class<?> [] groups() default {};
     Class<? extends Payload> [] payload() default {};
 }
 
-// Deleted from DeletePartValidator.java
+// Deleted from DeletePartValidator.java. Line 1-26.
 public class DeletePartValidator implements ConstraintValidator<ValidDeletePart, Part> {
     @Override
     public void initialize(ValidDeletePart constraintAnnotation) {
