@@ -1,9 +1,9 @@
 
-D287 – JAVA FRAMEWORKS
-C:  Customize the HTML user interface for your customer’s application. The user interface should include the shop name, the product names, and the names of the parts.
+# D287 – JAVA FRAMEWORKS
+## C:  Customize the HTML user interface for your customer’s application. The user interface should include the shop name, the product names, and the names of the parts.
 
 CSS code added to mainscreen.html Line: 15-65. Title named was changed and CSS was added to give color to the header and footer.
-
+```
 <title>Rob's Toy Store</title>
 <style>
         body {
@@ -56,8 +56,9 @@ CSS code added to mainscreen.html Line: 15-65. Title named was changed and CSS w
             font-weight: bold;
         }
     </style>
-D. Add an “About” page to the application to describe your chosen customer’s company to web viewers and include navigation to and from the “About” page and the main screen.
-
+```
+## D. Add an “About” page to the application to describe your chosen customer’s company to web viewers and include navigation to and from the “About” page and the main screen.
+```
 About.html created Lines 1-97, AboutController.java created line 1-16.
 About link/button added to mainscreen.html, for access to About.html.
 
@@ -74,10 +75,11 @@ public class AboutController {
         return "about";
     }
 }
-E. Add a sample inventory appropriate for your chosen store to the application. You should have five parts and five products in your sample inventory and should not overwrite existing data in the database.
+```
+## E. Add a sample inventory appropriate for your chosen store to the application. You should have five parts and five products in your sample inventory and should not overwrite existing data in the database.
 
 Five Products & Parts added to BootStrapData.java file: Line 38-60.
-
+```
 public void run(String... args) throws Exception {
 
         if (outsourcedPartRepository.count() == 0) {
@@ -101,13 +103,14 @@ public void run(String... args) throws Exception {
         System.out.println("Number of Parts: " + partRepository.count());
         System.out.println(partRepository.findAll());
     }
-F. Add a “Buy Now” button to your product list. Your “Buy Now” button must meet each of the following parameters:
+```
+## F. Add a “Buy Now” button to your product list. Your “Buy Now” button must meet each of the following parameters:
 
 The “Buy Now” button must be next to the buttons that update and delete products.
 Display a message that indicates the success or failure of a purchase.
 The button should decrement the inventory of that product by one. It should not affect the inventory of any of the associated parts.
 Updated Table and added Buy option Line 145-163, in mainscreen.html. A confirmation pop-up was generated to confirm purchase.
-
+```
 <td>
                 <form th:action="@{/buyProduct}" method="post" onsubmit="return confirm('By choosing Buy Now, you will purchase the item. Are you sure of your purchase?')">
                     <input type="hidden" name="productId" th:value="${tempProduct.id}" />
@@ -186,9 +189,10 @@ purchaseError.html added, Line 1-14. Page and message generated if purchase unsu
 </p>
 </body>
 </html>
-G. Modify the parts to track maximum and minimum inventory by doing the following: -Add additional fields to the part entity for maximum and minimum inventory part.java Line 28-40, Tracks value of maximum and minimum values with messages.
+```
+## G. Modify the parts to track maximum and minimum inventory by doing the following: -Add additional fields to the part entity for maximum and minimum inventory part.java Line 28-40, Tracks value of maximum and minimum values with messages.
 
-
+```
 @Min(value = 0, message = "Price value must be positive")
     private double price;
 
@@ -256,12 +260,13 @@ In Part.java isInvValid that checks if a given inventory value falls between min
 public boolean isInvValid(int inventory) {
 return inventory >= minInv && inventory <= maxInv;
 }
-H.Add validation for between or at the maximum and minimum fields. The validation must include the following:
+```
+## H.Add validation for between or at the maximum and minimum fields. The validation must include the following:
 
 -Display error messages for low inventory when adding and updating parts if the inventory is less than the minimum number of parts.
 
 Inventory check for Min and Max added to AddinhousePartController, Line 51-62.
-
+```
 // Check if the inventory falls below the minimum
             if (part.getInv() < part.getMinInv()) {
                 theModel.addAttribute("error", "Inventory cannot fall below the minimum required.");
@@ -316,10 +321,12 @@ return "OutsourcedPartForm";
                 theModel.addAttribute("error", "Inventory cannot exceed the maximum allowed.");
                 return "OutsourcedPartForm";
             }
-I. Add at least two unit tests for the maximum and minimum fields to the PartTest class in the test package
+```
+
+## I. Add at least two unit tests for the maximum and minimum fields to the PartTest class in the test package
 
 PartTest.java Line 159-197, Two test to test the max and min inventory match the expected value. Line
-
+```
 // The max value reflects the maximum number of items allowed in the inventory for a specific part, which helps in maintaining adequate stock levels without exceeding storage capacity.
     @Test
     void getMaxInv() {
@@ -360,8 +367,9 @@ PartTest.java Line 159-197, Two test to test the max and min inventory match the
         assertEquals(minIn, partIn.getMinInv(), "Failed to set min on InhousePart.");
         assertEquals(minOut, partOut.getMinInv(), "Failed to set min on OutsourcedPart.");
     }
-J. Remove the class files for any unused validators in order to clean your code.
-
+```
+## J. Remove the class files for any unused validators in order to clean your code.
+```
 // Deleted from ValidDeletePart. Line 11-15.
  String message() default "Part cannot be deleted if used in a product.";
     Class<?> [] groups() default {};
@@ -381,5 +389,5 @@ public class DeletePartValidator implements ConstraintValidator<ValidDeletePart,
         else return false;
     }
 }
+```
 
-// 
