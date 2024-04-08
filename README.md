@@ -1,5 +1,6 @@
 
 # D287 – JAVA FRAMEWORKS
+Customize a Spring Framework application with an HTML front-end and a Java backend
 ## C:  Customize the HTML user interface for your customer’s application. The user interface should include the shop name, the product names, and the names of the parts.
 
 CSS code added to mainscreen.html Line: 15-65. Title named was changed and CSS was added to give color to the header and footer.
